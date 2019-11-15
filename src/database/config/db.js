@@ -3,7 +3,7 @@ import config from './config';
 
 const dbPool = new Pool(config);
 
-types.setTypeParser(1700, val => parseFloat(val));
+types.setTypeParser(1700, (val) => parseFloat(val));
 
 export default {
   query(text, params) {
