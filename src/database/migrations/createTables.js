@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users(
     address VARCHAR(128) NOT NULL,
     gender  VARCHAR(6) NOT NULL,
     password TEXT NOT NULL,
-    jobdes VARCHAR(50) DEFAULT 'unverified' NOT NULL,
+    jobRole VARCHAR(50) DEFAULT 'unverified' NOT NULL,
     dept VARCHAR(50) NOT NULL,
     isadmin BOOLEAN DEFAULT false NOT NULL
 );`;
