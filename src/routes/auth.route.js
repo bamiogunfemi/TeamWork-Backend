@@ -1,16 +1,28 @@
 import { Router } from 'express';
-import authentication from '../controllers/auth.controller';
+import authController from '../controllers/auth.controller';
+import authMiddleware from '../middleware/auth';
 import authSchemas from '../validations/auth.validation';
 import validator from '../middleware/validator';
 
-const authRoute = Router();
+const auth = Router();
 
-const { signupSchema } = authSchemas;
+const { signupSchema, signinSchema } = authSchemas;
+const { isAdmin, verifyExisting, verifyToken } = authMiddleware;
+const { signup, signin } = authController;
 
-authRoute.post(
-  '/signup',
+auth.post(
+  '/create-user',
   validator(signupSchema),
-  authentication.createUser,
+  verifyToken,
+  isAdmin,
+  verifyExisting,
+  signup,
 );
 
-export default authRoute;
+auth.post(
+  '/signin',
+  validator(signinSchema),
+  signin,
+);
+
+export default auth;

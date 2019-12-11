@@ -1,25 +1,22 @@
 import { matchedData, validationResult } from 'express-validator';
-import Response from '../helpers/response';
+import { ApplicationError } from '../helpers/errors';
 
-const response = new Response();
-
-export default (schemas) => {
-  const validationCheck = (req, res, next) => {
+export default (schemas, status = 400) => {
+  const validationCheck = async (req, res, next) => {
     const errors = validationResult(req);
-    // eslint-disable-next-line no-param-reassign
-    req = { ...req, ...matchedData(req) };
+    req = { ...req, ...matchedData(req) }; // eslint-disable-line
 
     if (!errors.isEmpty()) {
-      const mapErrors = Object.entries(errors.mapped()).reduce(
-        (accumulator, [key, value]) => {
-          accumulator[key] = value.msg;
-          return accumulator;
-        }, {},
-      );
-      response.setError(400, mapErrors);
-      return response.send(res);
-    }
+      const mappedErrs = Object
+        .entries(errors.mapped())
+        .reduce((acc, [key, value]) => {
+          acc[key] = value.msg;
+          return acc;
+        }, {});
 
+      const appError = new ApplicationError(status, 'validation error', mappedErrs);
+      return next(appError);
+    }
     return next();
   };
   return [...(schemas.length && [schemas]), validationCheck];

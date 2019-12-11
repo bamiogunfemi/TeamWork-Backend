@@ -1,20 +1,13 @@
-import { Pool, types } from 'pg';
+import { Pool } from 'pg';
 import config from './config';
 
-const dbPool = new Pool(config);
-
-types.setTypeParser(1700, (val) => parseFloat(val));
+const DBPool = new Pool(config);
 
 export default {
   query(text, params) {
-    return new Promise((resolve, reject) => {
-      dbPool.query(text, params)
-        .then((res) => {
-          resolve(res);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+    return DBPool.query(text, params);
+  },
+  getClient() {
+    return DBPool.connect();
   },
 };
