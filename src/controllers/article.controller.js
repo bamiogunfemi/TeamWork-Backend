@@ -1,4 +1,6 @@
-import { ApplicationError, NotFoundError } from '../helpers/error';
+
+import { ApplicationError, NotFoundError } from '../helpers/errors';
+
 import { Article, Comment } from '../database/models';
 
 export default {
@@ -17,7 +19,9 @@ export default {
   },
 
   showArticle: async (req, res, next) => {
+
     const { params: { id } } = req;
+
     try {
       const article = await Article.find({ id });
       if (!article) return next(new NotFoundError('article not found'));
@@ -29,7 +33,10 @@ export default {
   },
 
   updateArticle: async (req, res, next) => {
+
+
     const { params: { id }, body } = req;
+
     try {
       const article = await Article.find({ id });
       const updatedArticle = await article.update(body);
@@ -40,11 +47,13 @@ export default {
   },
 
   deleteArticle: async (req, res, next) => {
+
     const { params: { id } } = req;
     try {
       const article = await Article.find({ id });
       await article.delete(article);
       return res.status(200).json({ status: 'success', data: 'article deleted' });
+
     } catch (error) {
       return next(new ApplicationError(500, error.message));
     }
@@ -70,6 +79,7 @@ export default {
       console.log('*****', id);
 
       return res.status(201).json({ status: 'succcess'/* data: comment */ });
+
     } catch (error) {
       return next(new ApplicationError(500, error.message));
     }
