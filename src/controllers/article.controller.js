@@ -34,8 +34,8 @@ export default {
 
   updateArticle: async (req, res, next) => {
 
+
     const { params: { id }, body } = req;
-;
 
     try {
       const article = await Article.find({ id });
@@ -54,7 +54,6 @@ export default {
       await article.delete(article);
       return res.status(200).json({ status: 'success', data: 'article deleted' });
 
-  
     } catch (error) {
       return next(new ApplicationError(500, error.message));
     }
